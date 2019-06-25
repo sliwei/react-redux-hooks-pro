@@ -1,7 +1,7 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
@@ -24,12 +24,18 @@ module.exports = {
 	},
 	plugins: [
 		// 打包之前清除文件
-		new CleanWebpackPlugin(['dist'], {
-			root: path.resolve(__dirname, './'),
-		}),
+		new CleanWebpackPlugin(),
 		// 模板
 		new HtmlWebpackPlugin({
-			template: path.resolve(__dirname, './index.html'),
+			template: path.resolve(__dirname, '../index.html'),
+			filename: 'index.html',
+			inject: true,
+			minify: {
+				removeComments: true,
+				collapseWhitespace: true,
+				removeAttributeQuotes: true
+			},
+			chunksSortMode: 'dependency'
 		}),
 		// 解决vender后面的hash每次都改变
 		new webpack.HashedModuleIdsPlugin(),
@@ -42,7 +48,7 @@ module.exports = {
 				react: {
 					name: 'react',
 					test: module => {
-						return /react|react-dom|react-router-dom/.test(module.context);
+						return /\\react\\|\\react-dom\\|\\react-router-dom\\/.test(module.context);
 					},
 					priority: 9,
 					chunks: 'all',
@@ -50,7 +56,7 @@ module.exports = {
 				redux: {
 					name: 'redux',
 					test: module => {
-						return /react-redux|redux/.test(module.context);
+						return /\\redux\\|\\react-redux\\|\\redux-thunk\\/.test(module.context);
 					},
 					priority: 8,
 					chunks: 'all',
@@ -62,7 +68,7 @@ module.exports = {
 			new UglifyJsPlugin({
 				uglifyOptions: {
 					compress: {
-						warnings: false,
+						// warnings: false,
 						drop_debugger: true,
 						drop_console: true,
 					},

@@ -2,21 +2,25 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const portfinder = require('portfinder');
+const webpack = require('webpack');
 
 const devWebpackConfig = {
 	mode: 'development',
 	devtool: '#cheap-module-eval-source-map',
 	entry: './src/index.js',
+	output: {
+		publicPath: '/'
+	},
 	devServer: {
 		clientLogLevel: 'warning',
 		historyApiFallback: {rewrites: {from: /.*/, to: '/index.html'}},
 		hot: true,
-		contentBase: false,
-		compress: true,
+		contentBase: path.join(__dirname, '..', 'dll'), // 静态文件根目录
+		compress: false,
 		host: '0.0.0.0',
 		port: 8080,
 		open: false,
-		overlay: {warnings: false, errors: true},
+		overlay: true,
 		publicPath: '/',
 		proxy: {},
 		quiet: true,
@@ -34,7 +38,17 @@ const devWebpackConfig = {
 	plugins: [
 		// 模板
 		new HtmlWebpackPlugin({
-			template: path.resolve(__dirname, './index.html'),
+			template: path.resolve(__dirname, '..', 'index.html'),
+			filename: 'index.html',
+			react: './react.dll.js', // 与dll配置文件中output.fileName对齐
+			redux: './redux.dll.js', // 与dll配置文件中output.fileName对齐
+			hash: true, // 防止缓存
+			minify: {
+				removeAttributeQuotes: true // 压缩 去掉引号
+			}
+		}),
+		new webpack.DllReferencePlugin({
+			manifest: require(path.join(__dirname, '..', 'dll', 'manifest.json')),
 		}),
 	],
 };
