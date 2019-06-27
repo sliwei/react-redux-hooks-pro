@@ -24,8 +24,14 @@
 	<% if(htmlWebpackPlugin.options.react) { %>
 		<script src="<%= htmlWebpackPlugin.options.react %>"></script>
 	<% } %>
-	<% if(htmlWebpackPlugin.options.react) { %>
+	<% if(htmlWebpackPlugin.options.redux) { %>
 	<script src="<%= htmlWebpackPlugin.options.redux %>"></script>
+	<% } %>
+	<% if(htmlWebpackPlugin.options.echarts) { %>
+	<script src="<%= htmlWebpackPlugin.options.echarts %>"></script>
+	<% } %>
+	<% if(htmlWebpackPlugin.options.blueprint) { %>
+	<script src="<%= htmlWebpackPlugin.options.blueprint %>"></script>
 	<% } %>
 </body>
 </html>

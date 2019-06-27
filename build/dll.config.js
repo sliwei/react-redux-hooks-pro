@@ -16,6 +16,17 @@ module.exports = {
 			'react-redux',
 			'redux-thunk'
 		],
+		echarts: [
+			'echarts',
+		],
+		blueprint: [
+			'@blueprintjs/core',
+			'@blueprintjs/datetime',
+			'@blueprintjs/docs-theme',
+			'@blueprintjs/icons',
+			'@blueprintjs/select',
+			'@blueprintjs/table',
+		],
 	},
 	output: {
 		path: path.join(__dirname, '../dll'),

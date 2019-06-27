@@ -1,6 +1,8 @@
+import '@babel/polyfill'
+import 'normalize.css'
 import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
-import {Provider, useSelector, useDispatch} from 'react-redux'
+import {Provider, useDispatch} from 'react-redux'
 import store from './store'
 import {App as app} from './actions'
 import {Route, Redirect, HashRouter as Router, Switch as RouterSwitch} from 'react-router-dom'
@@ -11,7 +13,6 @@ function Example() {
 	// 声明一个叫 "count" 的 state 变量
 	const [count, setCount] = useState(0);
 
-	const appStore = useSelector((state) => state.App)
 	const dispatch = useDispatch();
 	const addItm = () => {
 		let item = {
@@ -39,17 +40,10 @@ function Example() {
 			<button onClick={() => setCount(count + 1)}>
 				Click me
 			</button>
-
-
 			<br/>
-
 			<button onClick={addItm}>
 				store + `xiao li` item
 			</button>
-
-			{appStore.app_list.map((item, key) => {
-				return <p key={key}>{item.name}</p>
-			})}
 		</div>
 	);
 }

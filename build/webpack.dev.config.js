@@ -31,8 +31,17 @@ const devWebpackConfig = {
 			{
 				test: /\.jsx?$/,
 				exclude: /node_modules/,
-				loader: "babel-loader"
-			}
+				loader: 'babel-loader'
+			},
+			{
+				test: /\.(sa|sc|c)ss$/,
+				use: [
+					{ loader: 'style-loader' },
+					{ loader: 'css-loader', options: { sourceMap: true } },
+					{ loader: 'postcss-loader' },
+					{ loader: 'sass-loader', options: { sourceMap: true } },
+				],
+			},
 		]
 	},
 	plugins: [
@@ -42,6 +51,8 @@ const devWebpackConfig = {
 			filename: 'index.html',
 			react: './react.dll.js', // 与dll配置文件中output.fileName对齐
 			redux: './redux.dll.js', // 与dll配置文件中output.fileName对齐
+			echarts: './echarts.dll.js', // 与dll配置文件中output.fileName对齐
+			blueprint: './blueprint.dll.js', // 与dll配置文件中output.fileName对齐
 			hash: true, // 防止缓存
 			minify: {
 				removeAttributeQuotes: true // 压缩 去掉引号

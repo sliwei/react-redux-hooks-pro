@@ -1,6 +1,8 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
@@ -19,7 +21,19 @@ module.exports = {
 				test: /\.jsx?$/,
 				exclude: /node_modules/,
 				loader: "babel-loader"
-			}
+			},
+			{
+				test: /\.(sa|sc|c)ss$/,
+				use: [
+					{
+						loader: MiniCssExtractPlugin.loader,
+						options: { publicPath: '../' },
+					},
+					'css-loader',
+					'postcss-loader',
+					'sass-loader',
+				],
+			},
 		]
 	},
 	plugins: [
@@ -39,6 +53,13 @@ module.exports = {
 		}),
 		// 解决vender后面的hash每次都改变
 		new webpack.HashedModuleIdsPlugin(),
+		// 压缩CSS插件
+		new MiniCssExtractPlugin({
+			// Options similar to the same options in webpackOptions.output
+			// both options are optional
+			filename: 'css/[name].[contenthash:8].css',
+			chunkFilename: 'css/[name].[contenthash:8].css',
+		}),
 	],
 	optimization: {
 		// 分离chunks
@@ -50,7 +71,6 @@ module.exports = {
 					test: module => {
 						return /\\react\\|\\react-dom\\|\\react-router-dom\\/.test(module.context);
 					},
-					priority: 9,
 					chunks: 'all',
 				},
 				redux: {
@@ -58,7 +78,18 @@ module.exports = {
 					test: module => {
 						return /\\redux\\|\\react-redux\\|\\redux-thunk\\/.test(module.context);
 					},
-					priority: 8,
+					chunks: 'all',
+				},
+				echarts: {
+					name: 'echarts',
+					test: /\\echarts\\/,
+					chunks: 'all',
+				},
+				blueprint: {
+					name: 'blueprint',
+					test: module => {
+						return /\\@blueprintjs\\/.test(module.context);
+					},
 					chunks: 'all',
 				},
 			},
@@ -76,6 +107,22 @@ module.exports = {
 				cache: true,
 				parallel: true,
 				sourceMap: false, // set to true if you want JS source maps
+			}),
+			// 压缩CSS代码
+			new OptimizeCSSAssetsPlugin({
+				assetNameRegExp: /\.css\.*(?!.*map)/g,  //注意不要写成 /\.css$/g
+				cssProcessor: require('cssnano'),
+				cssProcessorOptions: {
+					discardComments: { removeAll: true },
+					// 避免 cssnano 重新计算 z-index
+					safe: true,
+					// cssnano 集成了autoprefixer的功能
+					// 会使用到autoprefixer进行无关前缀的清理
+					// 关闭autoprefixer功能
+					// 使用postcss的autoprefixer功能
+					autoprefixer: false,
+				},
+				canPrint: true,
 			}),
 		],
 	},
