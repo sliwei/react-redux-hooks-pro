@@ -1,96 +1,19 @@
+if (module.hot) {
+	module.hot.accept();
+}
 import '@babel/polyfill'
 import 'normalize.css'
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider, useDispatch} from 'react-redux'
+import {Provider} from 'react-redux'
 import store from './store'
-import {App as app} from './actions'
-import {Route, Redirect, HashRouter as Router, Switch as RouterSwitch} from 'react-router-dom'
-import Home from './views/home'
-import Login from './views/login'
-
-function Example() {
-	// 声明一个叫 "count" 的 state 变量
-	const [count, setCount] = useState(0);
-
-	const dispatch = useDispatch();
-	const addItm = () => {
-		let item = {
-			name: 'xiao li'
-		};
-		dispatch(app(item))
-	};
-
-	useEffect(() => {
-		async function fun() {
-			await setTimeout(() => {
-				console.log('200');
-			}, 2000)
-			await setTimeout(() => {
-				console.log('500');
-			}, 5000)
-		}
-
-		fun();
-	}, []);
-
-	return (
-		<div>
-			<p>You clicked {count} times</p>
-			<button onClick={() => setCount(count + 1)}>
-				Click me
-			</button>
-			<br/>
-			<button onClick={addItm}>
-				store + `xiao li` item
-			</button>
-		</div>
-	);
-}
-
-function App() {
-
-	const dispatch = useDispatch();
-	const addItm = () => {
-		let item = {
-			name: 'xiao li APP'
-		};
-		dispatch(app(item))
-	};
-
-	return (
-		<div>
-
-			<div style={{border: '1px solid #f00', margin: '20px'}}>
-				<h1>Example</h1>
-				<Example/>
-			</div>
-
-			<div style={{border: '1px solid #f00', margin: '20px'}}>
-				<h1>App</h1>
-				<button onClick={addItm}>
-					add Example store + `xiao li APP` item
-				</button>
-
-				<div style={{border: '1px solid #0f0', margin: '20px'}}>
-					<h1>Route View</h1>
-					<RouterSwitch>
-						<Route path="/" component={Home} exact/>
-						<Route path="/login" component={Login} exact/>
-						<Redirect to="/"/>
-					</RouterSwitch>
-				</div>
-
-			</div>
-
-		</div>
-	);
-}
+import View from './router'
+import '@blueprintjs/core/lib/css/blueprint.css'
+import '@blueprintjs/icons/lib/css/blueprint-icons.css'
+import '@blueprintjs/table/lib/css/table.css'
 
 ReactDOM.render(
 	<Provider store={store}>
-		<Router>
-			<App/>
-		</Router>
+		<View/>
 	</Provider>,
 	document.getElementById('app'));

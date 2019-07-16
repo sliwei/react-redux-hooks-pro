@@ -1,178 +1,131 @@
-import React, {useEffect} from 'react'
-import echarts from 'echarts'
+import React, {useState} from 'react'
+import {Form, Field} from 'react-final-form'
+import {H5, Button, Intent, InputGroup, FormGroup, Dialog, Classes, Toaster} from "@blueprintjs/core";
+import awaitTo from 'async-await-error-handling';
+const toaster = Toaster.create();
 
 export default (props) => {
 
-	const ret = () => props.history.push('/');
+	const [agreementSta, setAgreementSta] = useState(false);
+	const [loading, setLoading] = useState(false);
 
-	useEffect(() => {
-		setTimeout(() => initChart(), 500)
-	});
-
-	let chart = '';
-
-	const initChart = () => {
-		console.log('A');
-		let dom = document.getElementById('line');
-		console.log(dom);
-		chart = echarts.init(dom);
-		let setTime;
-		const set = () => {
-			setTime && clearTimeout(setTime);
-			setTime = setTimeout(() => {
-				if (chart) chart.resize()
-			}, 100)
-		};
-		window.onresize = () => set();
-
-		renderChart();
+	const login = () => {
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				resolve(30);
+			}, 1000);
+		})
 	};
 
-	const hexToRgba = (hex, opacity) => {
-		return "rgba(" + parseInt("0x" + hex.slice(1, 3)) + "," + parseInt("0x" + hex.slice(3, 5)) + "," + parseInt("0x" + hex.slice(5, 7)) + "," + opacity + ")";
+	// 登录
+	const onSubmit = async (dat) => {
+		setLoading(true);
+		const [err, data] = await awaitTo(login());
+		setLoading(false);
+		if (err) {
+			toaster.show({message: 'message', intent: Intent.DANGER, icon: 'error'});
+			return false;
+		}
+		console.log(data);
+		props.history.push('/');
 	};
 
-	const renderChart = () => {
-		let activeDat = {
-			typeStr: '测试',
-			color: '#240041',
-			data: [{d: 1, v: 10},{d: 1, v: 10},{d: 1, v: 10},{d: 1, v: 10},{d: 1, v: 10},],
-		};
-		let name = '', color = '', xlines = [], data = [], unit = '金额(元)';
-		name = activeDat.typeStr;
-		color = activeDat.color;
-		activeDat.data.map(item => {
-			xlines.push(item.d);
-			data.push(item.v);
-		});
+	// 校验
+	const validate = values => {
+		const errors = {};
+		if (!values.user) {
+			errors.user = '请输入账号';
+		}
+		if (!values.password) {
+			errors.password = '请输入密码';
+		}
+		if (!values.agreement) {
+			errors.agreement = '请阅读用户使用条款并同意';
+		}
+		return errors;
+	};
 
-		let option = {
-			title: {
-				text: '趋势图',
-				textStyle: {
-					align: 'center',
-					color: '#666666',
-					fontSize: 16,
-				},
-				top: '0%',
-				left: '5%',
-			},
-			tooltip: {
-				trigger: 'axis'
-			},
-			legend: {
-				color: [color],
-				data: [name],
-				left: 'center',
-				bottom: 'bottom',
-				selected: {
-					[name]: true
-				},
-			},
-			grid: {
-				top: '15%',
-				left: '2%',
-				right: '0%',
-				bottom: '3%',
-				height: '75%',
-				width: '98%',
-				containLabel: true
-			},
-			xAxis: {
-				type: 'category',
-				data: xlines,
-				axisLine: {
-					lineStyle: {
-						color: "#999"
-					}
-				}
-			},
-			yAxis: {
-				type: 'value',
-				name: unit,
-				nameTextStyle: {
-					color: "#999",
-				},
-				splitLine: {
-					lineStyle: {
-						type: 'dashed',
-						color: '#DDD'
-					}
-				},
-				axisLine: {
-					show: true,
-					lineStyle: {
-						color: "#999"
-					},
-				},
-				splitArea: {
-					show: false
-				}
-			},
-			series: [
-				{
-					name: name,
-					type: 'line',
-					data: data,
-					areaStyle: { //区域填充样式
-						normal: {
-							//线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-								offset: 0,
-								color: hexToRgba(color, .5)
-							},
-								{
-									offset: 1,
-									color: '#F2F2F2'
-								}
-							], false),
-							shadowColor: '#FFFFFF', //阴影颜色
-							shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-						}
-					},
-					color: color,
-					lineStyle: {
-						normal: {
-							width: 3,
-							color: {
-								type: 'linear',
+	// 状态色彩
+	const retIntent = meta => meta.valid ? Intent.SUCCESS : meta.visited && meta.touched ? Intent.DANGER : Intent.NONE;
 
-								colorStops: [{
-									offset: 0,
-									color: hexToRgba(color, .5) // 0% 处的颜色
-								}, {
-									offset: 0.4,
-									color: color // 100% 处的颜色
-								}, {
-									offset: 1,
-									color: color // 100% 处的颜色
-								}],
-								globalCoord: false // 缺省为 false
-							},
-							shadowColor: hexToRgba(color, .5),
-							shadowBlur: 10,
-							shadowOffsetY: 8
-						}
-					},
-					itemStyle: {
-						normal: {
-							color: color,
-							borderWidth: 6,
-							borderColor: color
-						}
-					},
-					smooth: true
-				},
-			]
-		};
-		chart && chart.setOption(option);
-	}
+	return <div style={{width: 300, margin: '200px auto 0'}}>
 
-	return <div>
-		<input type="text"/>
-		login
-		<input type="button" value="ret" onClick={ret}/>
+		<H5>登入系统</H5>
+		<Form
+			onSubmit={onSubmit}
+			validate={validate}
+			render={({handleSubmit, pristine, invalid}) => (
+				<form onSubmit={handleSubmit}>
 
-		<div id="line" style={{width: '100%', height: '300px', margin: '0 auto'}}></div>
+					<Field name="user">
+						{({input, meta}) => (
+							<FormGroup
+								intent={retIntent(meta)}
+								helperText={meta.touched && meta.error && meta.error}
+								label="账号"
+								labelFor="text-user"
+								labelInfo="(必填)">
+								<InputGroup intent={retIntent(meta)} id="text-user" {...input} placeholder="请输入账号" autocomplete="off"/>
+							</FormGroup>
+						)}
+					</Field>
+
+					<Field name="password">
+						{({input, meta}) => (
+							<FormGroup
+								intent={retIntent(meta)}
+								helperText={meta.touched && meta.error && meta.error}
+								label="密码"
+								labelFor="text-password"
+								labelInfo="(必填)">
+								<InputGroup intent={retIntent(meta)} id="text-password" {...input} placeholder="请输入密码" autocomplete="off"/>
+							</FormGroup>
+						)}
+					</Field>
+
+					<Field name="agreement">
+						{({input, meta}) => (
+							<FormGroup
+								intent={retIntent(meta)}
+								helperText={meta.touched && meta.error && meta.error}
+								labelFor="text-agreement">
+								<label className="bp3-control bp3-checkbox">
+									<input {...input} id="text-agreement" type="checkbox"/>
+									<span className="bp3-control-indicator"/>
+									同意<a href="javascript:;" onClick={() => setAgreementSta(true)}>用户使用条款</a>
+								</label>
+							</FormGroup>
+						)}
+					</Field>
+
+					<Button loading={loading} intent={Intent.PRIMARY} type="submit" disabled={pristine || invalid} text="登录"/>
+				</form>
+			)}
+		/>
+
+		<Dialog
+			icon="info-sign"
+			onClose={() => setAgreementSta(false)}
+			title="用户使用条款"
+			isOpen={agreementSta}
+			style={{width: 600}}
+		>
+			<div className={Classes.DIALOG_BODY}>
+				<p>
+					<strong>
+						用户使用条款
+					</strong>
+				</p>
+				<p>1.xxx</p>
+				<p>1.xxx</p>
+				<p>1.xxx</p>
+			</div>
+
+			<div className={Classes.DIALOG_FOOTER}>
+				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
+					<Button onClick={() => setAgreementSta(false)}>我知道了</Button>
+				</div>
+			</div>
+		</Dialog>
 	</div>
 }

@@ -1,0 +1,36 @@
+.menu {
+  float: left;
+  width: 200px;
+}
+
+.content {
+  float: left;
+  width: calc(100% - 200px);
+  overflow: hidden;
+}
+
+.min_menu {
+  float: left;
+  width: 50px;
+}
+
+.min_content {
+  float: left;
+  width: calc(100% - 50px);
+  overflow: hidden;
+}
+
+.head {
+  height: 50px;
+  box-shadow: 0 0 5px 2px #aaa;
+}
+
+.body {
+  height: calc(100vh - 80px);
+  overflow: auto;
+  padding: 20px;
+}
+
+.footer {
+  height: 30px;
+}

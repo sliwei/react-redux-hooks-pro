@@ -24,15 +24,31 @@ module.exports = {
 			},
 			{
 				test: /\.(sa|sc|c)ss$/,
+				exclude: /node_modules/,
 				use: [
-					{
-						loader: MiniCssExtractPlugin.loader,
-						options: { publicPath: '../' },
-					},
-					'css-loader',
+					{loader: MiniCssExtractPlugin.loader, options: {publicPath: '../'}},
+					{loader: 'css-loader', options: {modules: true}},
 					'postcss-loader',
 					'sass-loader',
 				],
+			},
+			{
+				test: /\.(sa|sc|c)ss$/,
+				include: /node_modules/,
+				use: [
+					{loader: MiniCssExtractPlugin.loader, options: {publicPath: '../'}},
+					{loader: 'css-loader'},
+					'postcss-loader',
+					'sass-loader',
+				],
+			},
+			{
+				test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+				loader: 'file-loader',
+				options: {
+					limit: 10000,
+					name: 'fonts/[name].[contenthash:8].[ext]',
+				},
 			},
 		]
 	},
@@ -72,6 +88,8 @@ module.exports = {
 						return /\\react\\|\\react-dom\\|\\react-router-dom\\/.test(module.context);
 					},
 					chunks: 'all',
+					priority: 10,
+					minChunks: 2,
 				},
 				redux: {
 					name: 'redux',
@@ -79,11 +97,15 @@ module.exports = {
 						return /\\redux\\|\\react-redux\\|\\redux-thunk\\/.test(module.context);
 					},
 					chunks: 'all',
+					priority: 10,
+					minChunks: 2,
 				},
 				echarts: {
 					name: 'echarts',
 					test: /\\echarts\\/,
 					chunks: 'all',
+					priority: 10,
+					minChunks: 1,
 				},
 				blueprint: {
 					name: 'blueprint',
@@ -91,9 +113,22 @@ module.exports = {
 						return /\\@blueprintjs\\/.test(module.context);
 					},
 					chunks: 'all',
+					priority: 10,
+					minChunks: 1,
+				},
+				common: {
+					name: "common",
+					chunks: "all",
+					minChunks: 1,
+					priority: 0
 				},
 			},
 		},
+
+		runtimeChunk: {
+			"name": "manifest"
+		},
+
 		minimizer: [
 			// 压缩JS代码
 			new UglifyJsPlugin({
@@ -113,7 +148,7 @@ module.exports = {
 				assetNameRegExp: /\.css\.*(?!.*map)/g,  //注意不要写成 /\.css$/g
 				cssProcessor: require('cssnano'),
 				cssProcessorOptions: {
-					discardComments: { removeAll: true },
+					discardComments: {removeAll: true},
 					// 避免 cssnano 重新计算 z-index
 					safe: true,
 					// cssnano 集成了autoprefixer的功能
