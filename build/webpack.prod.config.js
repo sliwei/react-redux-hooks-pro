@@ -1,14 +1,24 @@
 const path = require('path');
+const os = require('os');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const HappyPack = require('happypack');
+const happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
 	mode: 'production',
 	entry: './src/index.js',
+	resolve: {
+		extensions: ['.js'],
+		alias: {
+			'src': resolve('src'),
+		},
+	},
 	// 输出
 	output: {
 		filename: 'js/[name].[contenthash:8].js',
@@ -19,8 +29,8 @@ module.exports = {
 		rules: [
 			{
 				test: /\.jsx?$/,
+				loader: 'happypack/loader?id=happyBabel',
 				exclude: /node_modules/,
-				loader: "babel-loader"
 			},
 			{
 				test: /\.(sa|sc|c)ss$/,
@@ -67,6 +77,17 @@ module.exports = {
 			},
 			chunksSortMode: 'dependency'
 		}),
+		// 多线程加速处理
+		new HappyPack({
+			// 用id来标识 happypack处理类文件
+			id: 'happyBabel',
+			// 如何处理 用法和loader 的配置一样
+			loaders: [{loader: 'babel-loader?cacheDirectory=true'}],
+			// 共享进程池
+			threadPool: happyThreadPool,
+			// 允许 HappyPack 输出日志
+			verbose: true,
+		}),
 		// 解决vender后面的hash每次都改变
 		new webpack.HashedModuleIdsPlugin(),
 		// 压缩CSS插件
@@ -76,53 +97,30 @@ module.exports = {
 			filename: 'css/[name].[contenthash:8].css',
 			chunkFilename: 'css/[name].[contenthash:8].css',
 		}),
+		// 性能视图
+		// new BundleAnalyzerPlugin(),
 	],
 	optimization: {
 		// 分离chunks
 		splitChunks: {
 			chunks: 'all',
-			cacheGroups: {
-				react: {
-					name: 'react',
-					test: module => {
-						return /\\react\\|\\react-dom\\|\\react-router-dom\\/.test(module.context);
-					},
-					chunks: 'all',
-					priority: 10,
-					minChunks: 2,
+			minSize: 300000,
+			maxSize: 500000,
+			minChunks: 1, // 模块使用次数 > minChunks进行代码分割
+			maxAsyncRequests: 5, // 异步模块内部最大并行请求数
+			maxInitialRequests: 3, // 入口并行加载的最大请求数(入口文件最多能拆分3个文件被http请求)
+			automaticNameDelimiter: '~', // 文件名连接符
+			name: true, // 自动生成文件名
+			cacheGroups: { // 分割代码缓存组(同步代码分割有效)
+				vendor: { // vendors组，入口文件：main.js
+					test: /[\\/]node_modules[\\/]/, // 分割nodule_modules下的代码
+					priority: -10, // 分割优先级(当模块符合多个组时，放在优先级高的组中)
 				},
-				redux: {
-					name: 'redux',
-					test: module => {
-						return /\\redux\\|\\react-redux\\|\\redux-thunk\\/.test(module.context);
-					},
-					chunks: 'all',
-					priority: 10,
-					minChunks: 2,
-				},
-				echarts: {
-					name: 'echarts',
-					test: /\\echarts\\/,
-					chunks: 'all',
-					priority: 10,
-					minChunks: 1,
-				},
-				blueprint: {
-					name: 'blueprint',
-					test: module => {
-						return /\\@blueprintjs\\/.test(module.context);
-					},
-					chunks: 'all',
-					priority: 10,
-					minChunks: 1,
-				},
-				common: {
-					name: "common",
-					chunks: "all",
-					minChunks: 1,
-					priority: 0
-				},
-			},
+				default: { // default组，入口文件：main.js
+					priority: -20,
+					reuseExistingChunk: true, // 忽略已打包过的模块
+				}
+			}
 		},
 
 		runtimeChunk: {

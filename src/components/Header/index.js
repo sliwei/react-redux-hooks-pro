@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux'
-import {OpenSta} from '../../actions'
+import {OpenSta} from 'src/actions'
 import {Link} from "react-router-dom";
 import {Icon} from "@blueprintjs/core";
 

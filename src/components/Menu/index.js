@@ -15,8 +15,8 @@ export default () => {
 				<Divider/>
 			</>}
 			<Menu>
-				<MenuItem icon="home" href="/#/home"/>
-				<MenuItem icon="timeline-area-chart" href="/#/echarts"/>
+				<MenuItem icon="home" href="#/home"/>
+				<MenuItem icon="timeline-area-chart" href="#/echarts"/>
 			</Menu>
 		</>
 	);

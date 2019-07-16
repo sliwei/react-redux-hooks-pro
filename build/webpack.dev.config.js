@@ -1,4 +1,5 @@
 const path = require('path');
+const { resolve } = require('path');
 const os = require('os');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
@@ -11,6 +12,12 @@ const devWebpackConfig = {
 	mode: 'development',
 	devtool: '#cheap-module-eval-source-map',
 	entry: './src/index.js',
+	resolve: {
+		extensions: ['.js'],
+		alias: {
+			'src': resolve('src'),
+		},
+	},
 	output: {
 		publicPath: '/'
 	},
