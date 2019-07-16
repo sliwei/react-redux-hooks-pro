@@ -16,7 +16,7 @@ module.exports = {
 	resolve: {
 		extensions: ['.js'],
 		alias: {
-			'src': resolve('src'),
+			'src': path.resolve('src'),
 		},
 	},
 	// 输出

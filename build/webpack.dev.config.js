@@ -1,5 +1,4 @@
 const path = require('path');
-const { resolve } = require('path');
 const os = require('os');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
@@ -15,7 +14,7 @@ const devWebpackConfig = {
 	resolve: {
 		extensions: ['.js'],
 		alias: {
-			'src': resolve('src'),
+			'src': path.resolve('src'),
 		},
 	},
 	output: {
