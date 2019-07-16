@@ -6,8 +6,11 @@ export default (props) => {
 	const ret = () => props.history.push('/');
 
 	useEffect(() => {
-		setTimeout(() => initChart(), 500)
-	});
+		setTimeout(() => initChart(), 500);
+		return () => {
+			chart = '';
+		}
+	}, []);
 
 	let chart = '';
 

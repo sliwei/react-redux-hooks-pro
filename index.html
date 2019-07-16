@@ -18,6 +18,76 @@
 	<script>var _iealwn = {once: 0, outver: 9};</script>
 	<script id="_iealwn_js" src="https://support.dmeng.net/ie-alert-warning/latest.js"></script>
 	<![endif]-->
+	<style>
+
+		.container {
+			position: relative;
+		}
+		.page {
+			position: absolute;
+			left: 0px;
+			right: 0px;
+		}
+
+		.page-enter {
+
+		}
+
+		.page-enter-active {
+			transform-origin: center top;
+			animation: slideInUp-in .4s;
+		}
+
+		.page-exit {
+
+		}
+
+		.page-exit-active {
+			transform-origin: center top;
+			animation: slideInUp-out .4s;
+		}
+
+
+		@keyframes slideInUp-in {
+			0% {
+				-webkit-transform: translate3d(0, 20px, 0);
+				transform: translate3d(0, 20px, 0);
+				visibility: visible;
+				opacity: 0;
+			}
+			50% {
+				-webkit-transform: translate3d(0, 20px, 0);
+				transform: translate3d(0, 20px, 0);
+				visibility: visible;
+				opacity: 0;
+			}
+			100% {
+				-webkit-transform: translateZ(0);
+				transform: translateZ(0);
+				opacity: 1;
+			}
+		}
+
+		@keyframes slideInUp-out {
+			0% {
+				-webkit-transform: translateZ(0);
+				transform: translateZ(0);
+				opacity: 1;
+			}
+			50% {
+				-webkit-transform: translate3d(0, 20px, 0);
+				transform: translate3d(0, 20px, 0);
+				visibility: visible;
+				opacity: 0;
+			}
+			100% {
+				-webkit-transform: translate3d(0, 20px, 0);
+				transform: translate3d(0, 20px, 0);
+				visibility: visible;
+				opacity: 0;
+			}
+		}
+	</style>
 </head>
 <body>
 	<div id="app"></div>

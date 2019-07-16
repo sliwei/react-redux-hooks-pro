@@ -46,7 +46,7 @@ export default (props) => {
 			<Switch label="Large"/>
 			<Switch label="Loading"/>
 			<Switch label="Minimal"/>
-			<H5>Example</H5>
+			<H5>Example 11</H5>
 			<Switch label="Icons only"/>
 
 			<AnchorButton icon="small-tick" text="确定" intent="primary" onClick={changeSta}/>

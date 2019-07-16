@@ -7,6 +7,7 @@ const webpack = require('webpack');
 const HappyPack = require('happypack');
 const happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
 
+// https://juejin.im/post/5d089f0a6fb9a07eda0319b5#heading-58
 const devWebpackConfig = {
 	mode: 'development',
 	devtool: '#cheap-module-eval-source-map',
