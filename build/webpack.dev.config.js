@@ -44,11 +44,21 @@ const devWebpackConfig = {
 				exclude: /node_modules/,
 			},
 			{
-				test: /\.(sa|sc|c)ss$/,
+				test: new RegExp(`^(?!.*\\.global).*\\.(sa|sc|c)ss`),
 				exclude: /node_modules/,
 				use: [
 					{loader: 'style-loader'},
 					{loader: 'css-loader', options: {modules: true}},
+					'postcss-loader',
+					'sass-loader',
+				],
+			},
+			{
+				test: new RegExp(`^(.*\\.global).*\\.(sa|sc|c)ss`),
+				exclude: /node_modules/,
+				use: [
+					{loader: 'style-loader'},
+					{loader: 'css-loader'},
 					'postcss-loader',
 					'sass-loader',
 				],

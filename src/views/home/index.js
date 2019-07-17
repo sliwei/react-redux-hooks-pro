@@ -6,9 +6,7 @@ import { Cell, Column, Table } from "@blueprintjs/table";
 
 export default (props) => {
 
-	console.log(props);
 	const appStore = useSelector((state) => state.App);
-	console.log(appStore);
 
 	const [sta, setSta] = useState(0);
 	const [isOpen, setIsOpen] = useState(false);

@@ -1,21 +1,27 @@
-.page {
+.router-container {
+  position: relative;
+}
+
+.router-transition {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.router-transition-enter {
 
 }
 
-.page-enter {
-
-}
-
-.page-enter-active {
+.router-transition-enter-active {
   transform-origin: center top;
   animation: slideInUp-in .4s;
 }
 
-.page-exit {
+.router-transition-exit {
 
 }
 
-.page-exit-active {
+.router-transition-exit-active {
   transform-origin: center top;
   animation: slideInUp-out .4s;
 }

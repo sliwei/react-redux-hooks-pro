@@ -1,13 +1,19 @@
 import React from "react";
 import loadable from '@loadable/component'
-import {Route, Redirect, HashRouter, Switch as RouterSwitch} from 'react-router-dom'
+import {Route, Redirect, HashRouter, Switch} from 'react-router-dom'
+import routes from './rootRouterConfig'
 
+/**
+ * 跟路由
+ * @returns {*}
+ */
 export default () => {
 	return <HashRouter>
-		<RouterSwitch>
-			<Route path="/login" component={loadable(() => import('src/views/login'))}/>
-			<Route path="/" component={loadable(() => import('src/components/Layout'))}/>
+		<Switch>
+			{routes.map(({path, component}, index) => (
+				<Route path={path} key={index} component={loadable(() => import(`../${component}`))}/>
+			))}
 			<Redirect to="/"/>
-		</RouterSwitch>
+		</Switch>
 	</HashRouter>
 }

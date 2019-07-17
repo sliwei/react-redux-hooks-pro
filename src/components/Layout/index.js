@@ -1,7 +1,7 @@
 import React from 'react';
 import Menu from '../Menu'
 import Header from '../Header'
-import Body from 'src/router/appRouter'
+import AppRouter from 'src/router/appRouter'
 import Footer from '../Footer'
 import css from './index.scss'
 import {useSelector} from "react-redux";
@@ -20,7 +20,7 @@ export default () => {
 					<Header/>
 				</div>
 				<div className={css.body}>
-					<Body/>
+					<AppRouter/>
 				</div>
 				<div className={css.footer}>
 					<Footer/>
