@@ -1,22 +1,24 @@
 .menu {
   float: left;
-  width: 200px;
+  width: 256px;
+  transition: width .35s;
 }
 
 .content {
   float: left;
-  width: calc(100% - 200px);
+  width: calc(100% - 256px);
   overflow: hidden;
 }
 
 .min_menu {
   float: left;
-  width: 50px;
+  width: 64px;
+  transition: width .35s;
 }
 
 .min_content {
   float: left;
-  width: calc(100% - 50px);
+  width: calc(100% - 64px);
   overflow: hidden;
 }
 
