@@ -27,6 +27,8 @@ export default (props) => {
 
 	const handleClose = () => setIsOpen(!isOpen);
 
+	console.log('A', sta);
+
 	return (
 		<div>
 			HOME
@@ -52,7 +54,7 @@ export default (props) => {
 			{/*<input type="text" className={Classes.INPUT} onChange={changeVal} value={val}/>*/}
 			{/*<button className={Classes.BUTTON} onClick={showVal}>值</button>*/}
 
-			<InputGroup value={val} style={{width: 200}}/>
+			<InputGroup value={val} style={{width: 200}} onChange={e => setVal(e.target.value)}/>
 			<button className={Classes.BUTTON} onClick={showVal}>值</button>
 
 

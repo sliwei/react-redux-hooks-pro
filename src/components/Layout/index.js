@@ -9,11 +9,15 @@ import {useSelector} from "react-redux";
 export default () => {
 
 	const openSta = useSelector((state) => state.OpenSta);
+	const appStore = useSelector((state) => state.App);
 
 	return (
 		<>
 			<div className={openSta ? css.menu : css.min_menu}>
 				<Menu/>
+				{appStore.app_list.map((item, key) => {
+					return <p key={key}>{item.name}</p>
+				})}
 			</div>
 			<div className={openSta ? css.content : css.min_content}>
 				<div className={css.head}>

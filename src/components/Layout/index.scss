@@ -7,6 +7,7 @@
 .content {
   float: left;
   width: calc(100% - 256px);
+  transition: width .35s;
   overflow: hidden;
 }
 
@@ -19,12 +20,13 @@
 .min_content {
   float: left;
   width: calc(100% - 64px);
+  transition: width .35s;
   overflow: hidden;
 }
 
 .head {
   height: 50px;
-  box-shadow: 0 0 5px 2px #aaa;
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
 }
 
 .body {

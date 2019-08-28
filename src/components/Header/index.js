@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux'
 import {OpenSta} from 'src/actions'
 import {Link} from "react-router-dom";
@@ -12,6 +12,25 @@ function App() {
 	const changeOpenSta = () => {
 		dispatch(OpenSta(!openSta))
 	};
+
+	useEffect(() => {
+		let change = w => {
+			if (w < 1280) {
+				dispatch(OpenSta(false));
+			} else if (w >= 1280) {
+				dispatch(OpenSta(true));
+			}
+		};
+		let w = document.documentElement.clientWidth;
+		change(w);
+		window.onresize = e => {
+			let w = document.documentElement.clientWidth;
+			change(w);
+		};
+		return () => {
+			window.onresize = null;
+		};
+	}, []);
 
 	return (
 		<>
